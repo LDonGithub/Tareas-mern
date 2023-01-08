@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
+
 const app = express();
 
 //settings
@@ -11,8 +13,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 //routes
+app.use('/api/tasks', require('./routes/tasks.routes'));
 
 //static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 //starting server
 app.listen(app.get('port'), () => {
