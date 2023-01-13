@@ -111,7 +111,7 @@ class App extends Component {
                 {/*Navigation*/}
                 <nav class="#5e35b1 deep-purple darken-1">
                     <div class="nav-wrapper">
-                        <a href="/" class="brand-logo">Tareas</a>
+                        <a href="/" class="brand-logo center">Tareas</a>
                     </div>
                 </nav>
 
@@ -141,40 +141,40 @@ class App extends Component {
                         </div>
 
                         {/*Table*/}
-                        <div className="col s7">
-                            <table class="striped">
-                                <thead>
-                                    <tr>
-                                        <th>Titulo</th>
-                                        <th>Descripcion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        this.state.task.map(task => {
-                                            return(
-                                                <tr key={task._id}>
-                                                    <td>{task.title}</td>
-                                                    <td>{task.description}</td>
-                                                    <td>
-                                                        <button class="btn  #5e35b1 deep-purple darken-1" onClick={() => this.editTask(task._id)}> 
-                                                            <i class="material-icons">edit</i>
-                                                        </button>
-                                                        <button  class="btn #5e35b1 deep-purple darken-1" style={{margin: '4px'}} onClick={() => this.deleteTask(task._id)}> 
-                                                            <i class="material-icons">delete</i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
+                        <div className="card">
+                            <div className="col s7">
+                                <table class="striped centered">
+                                    <thead>
+                                        <tr>
+                                            <th>Titulo</th>
+                                            <th>Descripcion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            this.state.task.map(task => {
+                                                return(
+                                                    <tr key={task._id}>
+                                                        <td>{task.title}</td>
+                                                        <td>{task.description}</td>
+                                                        <td>
+                                                            <button class="btn  #5e35b1 deep-purple darken-1" onClick={() => this.editTask(task._id)}> 
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button  class="btn #5e35b1 deep-purple darken-1" style={{margin: '4px'}} onClick={() => this.deleteTask(task._id)}> 
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         )
     }
