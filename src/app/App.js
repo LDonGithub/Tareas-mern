@@ -6,30 +6,96 @@ class App extends Component {
         super();
         this.state = {
             title: '',
-            description: ''
+            description: '',
+            task: [],
+            _id: ''
         };
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
     }
 
     addTask(e){
-        fetch('api/tasks', {
-            method: 'POST',
-            body: JSON.stringify(this.state),
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
+        if(this.state._id){
+            fetch(`/api/tasks/${this.state._id}`, {
+                method: 'PUT',
+                body: JSON.stringify(this.state),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    M.toast({html: 'Tarea Actualizada'});
+                    this.setState({title: '', description: '', _id: ''});
+                    this.fetchTask();
+                })
+        } else {
+            fetch('api/tasks', {
+                method: 'POST',
+                body: JSON.stringify(this.state),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    M.toast({html: 'Tarea Guardada'});
+                    this.setState({title: '', description: ''});
+                    this.fetchTask();
+                })
+                .catch(err => console.error(err));
+        }
+        e.preventDefault();
+    }
+
+    deleteTask(id){
+        if(confirm('¿Estás seguro de eliminar la tarea?')){
+            fetch(`/api/tasks/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    M.toast({html: 'Tarea Eliminada'});
+                    this.fetchTask();
+                })
+        }
+    }
+
+    editTask(id){
+        if(confirm('¿Está seguro de editar la tarea?')){
+            fetch(`/api/tasks/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    this.setState({
+                        title: data.title,
+                        description: data.description,
+                        _id: data._id
+                    })
+                })
+        }
+    }
+
+    componentDidMount(){
+        this.fetchTask();
+    }
+
+    fetchTask(){
+        fetch('/api/tasks')
             .then(res => res.json())
             .then(data => {
                 console.log(data);
-                M.toast({html: 'Tarea Guardada'});
-                this.setState({title: '', description: ''});
-            })
-            .catch(err => console.error(err));
+                this.setState({task: data});
+            });
 
-        e.preventDefault();
     }
 
     handleChange(e){
@@ -41,7 +107,7 @@ class App extends Component {
 
     render(){
         return (
-            <div className="App">
+            <div class="App">
                 {/*Navigation*/}
                 <nav class="#5e35b1 deep-purple darken-1">
                     <div class="nav-wrapper">
@@ -72,6 +138,38 @@ class App extends Component {
                                     </form>
                                 </div>
                             </div>
+                        </div>
+
+                        {/*Table*/}
+                        <div className="col s7">
+                            <table class="striped">
+                                <thead>
+                                    <tr>
+                                        <th>Titulo</th>
+                                        <th>Descripcion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.task.map(task => {
+                                            return(
+                                                <tr key={task._id}>
+                                                    <td>{task.title}</td>
+                                                    <td>{task.description}</td>
+                                                    <td>
+                                                        <button class="btn  #5e35b1 deep-purple darken-1" onClick={() => this.editTask(task._id)}> 
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                        <button  class="btn #5e35b1 deep-purple darken-1" style={{margin: '4px'}} onClick={() => this.deleteTask(task._id)}> 
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
